@@ -20,7 +20,14 @@ public class QueryStringTest {
     void shouldRetrieveParameterByName(){
         QueryString queryString = new QueryString("text=hello");
         assertEquals(null, queryString.getParameter("Status"));
-        assertEquals("Hello", queryString.getParameter("text"));
+        assertEquals("hello", queryString.getParameter("text"));
+    }
+
+    @Test
+    void shouldHandleMultipleParameters(){
+        QueryString queryString = new QueryString("text=hello&status=200");
+        assertEquals("200", queryString.getParameter("status"));
+        assertEquals("hello", queryString.getParameter("text"));
     }
 
 
