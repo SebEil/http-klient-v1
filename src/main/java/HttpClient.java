@@ -2,24 +2,35 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class HttpClient {
-    public HttpClient(String hostName, int port, String requestTarget) {
+    private final int responseCode;
 
+    public HttpClient(String hostName, int port, String requestTarget) throws IOException {
+        Socket socket = new Socket(hostName, port);
+        String request = "GET " + requestTarget + " HTTP/1.1\r\n" +
+                "Host: " + hostName + "\r\n\r\n";
+        socket.getOutputStream().write(request.getBytes());
+
+        StringBuilder line = new StringBuilder();
+        int c;
+        while ((c = socket.getInputStream().read()) != -1) {
+            if (c == '\n' ) {
+                break;
+            }
+            line.append((char)c);
+        }
+        System.out.print(line);
+        String[] responseLineParts = line.toString().split(" ");
+        responseCode = Integer.parseInt(responseLineParts[1]);
     }
 
     public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("urlecho.appspot.com", 80);
-
-        String request = "GET /echo?status=200&body=Hello%20World! HTTP/1.1\r\n" +
-                "Host: urlecho.appspot.com\r\n\r\n";
-        socket.getOutputStream().write(request.getBytes());
-
-        int c;
-        while ((c = socket.getInputStream().read()) != -1) {
-            System.out.print((char)c);
-        }
+        String hostName = "urlecho.appspot.com";
+        int port = 80;
+        String requestTarget = "/echo?status=200&body=Hello%20World!";
+        new HttpClient(hostName, port, requestTarget);
     }
 
     public int getResponseCode() {
-        return 200;
+        return responseCode;
     }
 }
