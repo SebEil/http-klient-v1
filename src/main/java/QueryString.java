@@ -1,20 +1,20 @@
-public class QueryString {
-    public final String value;
-    public final String parameterName;
+import java.util.HashMap;
+import java.util.Map;
 
+public class QueryString {
+    private Map<String, String> parameters = new HashMap<>();
 
     public QueryString(String queryString) {
-        int equalPos = queryString.indexOf('=');
-        value = queryString.substring(equalPos+1);
-        parameterName = queryString.substring(0, equalPos);
+        for (String parameter : queryString.split("&")) {
+            int equalPos = parameter.indexOf('=');
+            String value = parameter.substring(equalPos+1);
+            String parameterName = parameter.substring(0, equalPos);
+            parameters.put(parameterName, value);
+        }
     }
 
     public String getParameter(String name) {
-
-        if (name.equals(parameterName)){
-            return value;
-        }
-        return null;
+        return parameters.get(name);
     }
 
 
