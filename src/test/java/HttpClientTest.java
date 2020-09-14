@@ -25,7 +25,7 @@ class HttpClientTest {
     @Test
     void shouldReadHeaders() throws IOException {
         HttpClient httpClient = makeEchoRequest("/echo?body=Kristiania");
-        assertEquals(10, httpClient.getResponseHeader("Content-Length"));
+        assertEquals("10", httpClient.getResponseHeader("Content-Length"));
     }
 
 }
